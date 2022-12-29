@@ -284,7 +284,7 @@ defmodule TMF882X do
         send(self(), :measure)
       end
 
-      {:noreply, %{state | running: true, app_ready: true}}
+      {:noreply, %{state | running: state.auto_start, app_ready: true}}
     end
   end
 
