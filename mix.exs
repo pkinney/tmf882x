@@ -46,16 +46,16 @@ defmodule TMF882X.MixProject do
 
   defp description do
     """
-    TMF882X dToF sensor
+    Driver for the TMF882X family of multi-zone direct time-of-flight (dToF) distance sensor
     """
   end
 
   defp package do
     [
-      files: ["lib/topo.ex", "lib/topo", "mix.exs", "README*"],
+      files: ["lib/tmf882x.ex", "lib/tmf882x", "mix.exs", "README*"],
       maintainers: ["Powell Kinney"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/pkinney/topo"}
+      links: %{"GitHub" => "https://github.com/pkinney/tmf882x"}
     ]
   end
 end
