@@ -6,6 +6,8 @@ defmodule TMF882X.MixProject do
       app: :tmf882x,
       version: "0.1.0",
       elixir: "~> 1.12",
+      description: description(),
+      package: package(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases()
@@ -25,7 +27,8 @@ defmodule TMF882X.MixProject do
       {:circuits_i2c, "~> 1.0"},
       {:circuits_gpio, "~> 1.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.19", only: :dev}
     ]
   end
 
@@ -38,6 +41,21 @@ defmodule TMF882X.MixProject do
         "credo",
         "dialyzer"
       ]
+    ]
+  end
+
+  defp description do
+    """
+    TMF882X dToF sensor
+    """
+  end
+
+  defp package do
+    [
+      files: ["lib/topo.ex", "lib/topo", "mix.exs", "README*"],
+      maintainers: ["Powell Kinney"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/pkinney/topo"}
     ]
   end
 end

@@ -1,6 +1,68 @@
 defmodule TMF882X do
   @moduledoc """
   Interface with tmf8820/tmf8821 direct time-of-flight (dToF) sensor ([https://ams.com/en/tmf8820]).
+
+  ### Starting
+
+  Start a `TMF882X` it directly from another process (See Options section below for more info):
+
+  ```elixir
+  {:ok, pid} = TMF882X.start_link(bus: "i2c-1")
+  ```
+
+  ### Configuration 
+
+  A configuration keyword list can be passed to the `start_link` function containing the following parameters:
+
+  * **`bus`** - Name of the I2C bus that the sensor is attached to.
+
+  * **`interrupt_gpio`** - If the interrupt pin of the sensor is connected, the GPIO number can be specified here.  If not interrupt
+                pin is specified, then the library will use I2C to poll when a new measurement packet is ready.
+
+  * **`enable_gpio`** - If the enable pin is connected, the GPIO number can be specified here. If connected, calling `reset/1` will
+                use this pin to reset the device.  Otherwise, I2C commands will be issued to reset the device. (default: `nil`)
+
+  * **`auto_start`** - If set to `true`, the device will immediately start taking measurements once the `app_ready` status is `true`.
+                    If set to `false`, the device will wait for a call to `start_measuring/1` before taking any measurements. (default: `true`)
+
+  * **`measure_interval`** - Target interval (in milliseconds) between measurements.  If set to `0`, as soon as a measurement is received, another
+                          will start.
+  * **`device_config`** - The configuration to be sent to the device on startup.  See Configuration section below.
+
+  ### Results
+
+  The calling process will receive messages of the format `{:tmf882x, %TMF882X.Result{}}`:
+
+  ```elixir
+  def handle_info({:tmf882x, %TMF882X.Result{} = result}) do
+  ...
+  end
+  ```
+
+  The `TMF882X.Result` struct contains a list of measurements from each channel.  Each measurement is a tuple containing a `distance` (in millimeters) and `confidence` (out of 255) value:
+
+  ```elixir
+  %TMF882X.Result{
+  tid: 200,
+  size: 128,
+  number: 200,
+  temperature: 41,
+  valid_results: 11,
+  ambient: 283,
+  photon_count: 16971,
+  reference_count: 60573,
+  sys_tick: 1215866837,
+  measurements: [
+    {844, 61},
+    {841, 106},
+    {1010, 56},
+    ...
+  ]
+  }
+  ```
+
+  Other fields in the `Result` struct are directly from the decode of the Result register.
+
   """
 
   use GenServer

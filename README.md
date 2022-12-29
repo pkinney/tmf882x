@@ -1,5 +1,9 @@
 # TMF882X
 
+![Build Status](https://github.com/pkinney/tmf882x/actions/workflows/ci.yaml/badge.svg)
+[![Hex.pm](https://img.shields.io/hexpm/v/tmf882x.svg)](https://hex.pm/packages/tmf882x)
+[![Documentation](https://img.shields.io/badge/documentation-gray)](https://hexdocs.pm/tmf882x)
+
 This library interfaces with [TMF8820](https://ams.com/en/tmf8820) (and theoretically [TMF8821](https://ams.com/en/tmf8821)) multi-zone Time-of-Flight (ToF) sensors. From the manufacturer:
 
 > The TMF8820 is a direct time-of-flight (dToF) sensor in a single modular package with associated VCSEL. The dToF device is based on SPAD, TDC and histogram technology and achieves 5000 mm detection range. Due to its lens on the SPAD, it supports 3x3 multizone output data and a wide, dynamically adjustable, field of view. A multi-lens-array (MLA) inside the package above the VCSEL widens up the FoI (field of illumination). All processing of the raw data is performed on-chip and the TMF8820 provides distance information together with confidence values on its I2C interface.
