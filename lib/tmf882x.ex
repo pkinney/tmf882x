@@ -80,6 +80,9 @@ defmodule TMF882X do
   @spec start_measuring(server()) :: :ok
   def start_measuring(pid), do: GenServer.cast(pid, :start_measuring)
 
+  @spec measure_once(server()) :: :ok
+  def measure_once(pid), do: GenServer.cast(pid, :measure_once)
+
   @doc """
   Stops the measurement process for the given device.  
   """
@@ -127,6 +130,18 @@ defmodule TMF882X do
   """
   @spec app_ready?(server()) :: boolean()
   def app_ready?(pid), do: GenServer.call(pid, :app_ready?)
+
+  def wait_for_app_ready(pid, timeout \\ 1000)
+  def wait_for_app_ready(_, timeout) when timeout <= 0, do: {:error, :timout}
+
+  def wait_for_app_ready(pid, timeout) do
+    if app_ready?(pid) do
+      :ok
+    else
+      :timer.sleep(10)
+      wait_for_app_ready(pid, timeout - 10)
+    end
+  end
 
   @doc """
   Returns true if the process is measuring actively.
@@ -271,6 +286,19 @@ defmodule TMF882X do
     {:noreply, state}
   end
 
+  def handle_cast(:measure_once, state) do
+    :ok = Measure.start(state.pid)
+    start = System.monotonic_time()
+
+    if state.int_gpio do
+      {:noreply, %{state | measurement_pending: true, measure_start: start}}
+    else
+      :ok = Measure.wait_for_interrupt(state.pid, 100)
+      :ok = complete_measurement(%{state | measure_start: start}, false)
+      {:noreply, state}
+    end
+  end
+
   @impl true
   def handle_info(:connect, state) do
     with :ok <- reset_enable_pin(state.en_gpio),
@@ -329,10 +357,10 @@ defmodule TMF882X do
   defp maybe_open_gpio(nil, _), do: {:ok, nil}
   defp maybe_open_gpio(pin, mode), do: Circuits.GPIO.open(pin, mode)
 
-  defp complete_measurement(state) do
+  defp complete_measurement(state, repeat \\ true) do
     result = Measure.read_data(state.pid)
     send(state.parent, {:tmf882x, result})
-    :timer.send_after(calc_measure_delay(state), :measure)
+    if repeat, do: :timer.send_after(calc_measure_delay(state), :measure)
     Measure.clear_interrupts(state.pid)
   end
 end

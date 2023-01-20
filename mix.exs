@@ -26,6 +26,8 @@ defmodule TMF882X.MixProject do
     [
       {:circuits_i2c, "~> 1.0"},
       {:circuits_gpio, "~> 1.0"},
+      {:replay, "~> 0.1.0"},
+      {:mimic, "~> 1.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.19", only: :dev}
