@@ -17,16 +17,16 @@ defmodule TMF882X do
   * **`bus`** - Name of the I2C bus that the sensor is attached to.
 
   * **`interrupt_gpio`** - If the interrupt pin of the sensor is connected, the GPIO number can be specified here.  If not interrupt
-                pin is specified, then the library will use I2C to poll when a new measurement packet is ready.
+                           pin is specified, then the library will use I2C to poll when a new measurement packet is ready.
 
   * **`enable_gpio`** - If the enable pin is connected, the GPIO number can be specified here. If connected, calling `reset/1` will
-                use this pin to reset the device.  Otherwise, I2C commands will be issued to reset the device. (default: `nil`)
+                        use this pin to reset the device.  Otherwise, I2C commands will be issued to reset the device. (default: `nil`)
 
   * **`auto_start`** - If set to `true`, the device will immediately start taking measurements once the `app_ready` status is `true`.
-                    If set to `false`, the device will wait for a call to `start_measuring/1` before taking any measurements. (default: `true`)
+                       If set to `false`, the device will wait for a call to `start_measuring/1` before taking any measurements. (default: `true`)
 
   * **`measure_interval`** - Target interval (in milliseconds) between measurements.  If set to `0`, as soon as a measurement is received, another
-                          will start.
+                             will start.
   * **`device_config`** - The configuration to be sent to the device on startup.  See Configuration section below.
 
   ### Results
